@@ -14,7 +14,7 @@
             <span
               @click="seejijin(showJiJin)"
               v-if="showJiJin === t.one.code"
-              :style="{ top: spanTop, left: spanLeft }"
+              :style="{ top: spanTop, right: spanLeft }"
               >查看基金</span
             >
           </p>
@@ -23,7 +23,7 @@
             <span
               @click="seejijin(showJiJin)"
               v-if="showJiJin === t.two.code"
-              :style="{ top: spanTop, left: spanLeft }"
+              :style="{ top: spanTop, right: spanLeft }"
               >查看基金</span
             >
           </p>
@@ -42,7 +42,7 @@
     <table class="gupiao">
       <tr>
         <th>股票名称</th>
-        <th>被持有次数</th>
+        <th>持有次数</th>
         <th>持有基金</th>
       </tr>
       <tr v-for="t of gupiaoEnd" :key="t.code">
@@ -56,7 +56,7 @@
           <span
             @click="seeGuPiao(showright)"
             v-if="showright === t.code"
-            :style="{ top: spanTop, left: spanLeft }"
+            :style="{ top: spanTop, right: spanLeft }"
             >查看股票</span
           >
         </td>
@@ -119,14 +119,6 @@ let isOk = ref(false),
   });
 })();
 function getData() {
-  /*
-    读取以存储的数据
-    [
-      [
-        '000000'，基金名字，基金持仓
-      ]
-    ]
-    */
   $axios({
     method: "get",
     url: `getPageData`,
@@ -247,15 +239,13 @@ function showRight(code, e) {
     spanTop.value = "";
     spanLeft.value = "";
   }, 3000);
-  spanTop.value = "calc(50% - 15px)";
+  spanTop.value = "calc(50% - 12px)";
   spanLeft.value = 15 + "px";
 }
 function seeGuPiao(code) {
   window.open(`http://stockpage.10jqka.com.cn/${code}`);
 }
-function seejijin(code) {
-  window.open(`http://fund.10jqka.com.cn/${code}`);
-}
+
 function seeJiJin(code, e) {
   clearTimeout(time);
   showJiJin.value = code;
@@ -264,8 +254,11 @@ function seeJiJin(code, e) {
     spanTop.value = "";
     spanLeft.value = "";
   }, 3000);
-  spanTop.value = "calc(50% - 12px)";
-  spanLeft.value = 15 + "px";
+  spanTop.value = "calc(50% - 11px)";
+  spanLeft.value = -3 + "px";
+}
+function seejijin(code) {
+  window.open(`http://fund.10jqka.com.cn/${code}`);
 }
 </script>
 <style scoped lang='scss'>
@@ -277,6 +270,8 @@ p {
   margin: 3px 0;
 }
 .gupiao {
+  $col1: 110px;
+  $col2: 64px;
   border: 1px solid;
   border-collapse: collapse;
   margin: 0 30px;
@@ -287,13 +282,16 @@ p {
     padding: 3px 5px;
   }
   th:nth-of-type(1) {
-    width: 120px;
+    width: $col1;
+  }
+  th {
+    font-size: 16px;
   }
   td {
     font-size: 14px;
   }
   tr td:nth-of-type(1) {
-    width: 120px;
+    width: $col1;
     font-size: 18px;
     text-align: center;
     position: relative;
@@ -310,11 +308,12 @@ p {
       cursor: pointer;
     }
   }
+
   th:nth-of-type(2) {
-    width: 110px;
+    width: $col2;
   }
   tr td:nth-of-type(2) {
-    width: 110px;
+    width: $col2;
     text-align: center;
   }
   tr td:nth-of-type(3) {
@@ -345,17 +344,17 @@ p {
       font-size: 14px;
       text-align: right;
       padding-right: 10px;
-
+      $spanBg: rgb(132, 241, 157);
       p:nth-of-type(1) {
         position: relative;
-        color: rgb(225, 159, 17);
+        color: rgb(141, 8, 106);
         span {
           position: absolute;
           z-index: 3;
           display: inline-block;
           width: 70px;
           height: 20px;
-          background: rgb(223, 240, 197);
+          background: $spanBg;
           line-height: 20px;
           border-radius: 3px;
           font-size: 12px;
@@ -365,7 +364,7 @@ p {
       }
       p:nth-of-type(2) {
         position: relative;
-        color: rgb(6, 99, 99);
+        color: rgb(2, 55, 55);
         span {
           text-align: center;
           position: absolute;
@@ -373,7 +372,7 @@ p {
           display: inline-block;
           width: 70px;
           height: 20px;
-          background: rgb(223, 240, 197);
+          background: $spanBg;
           line-height: 20px;
           border-radius: 3px;
           font-size: 12px;
