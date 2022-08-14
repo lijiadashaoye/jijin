@@ -77,13 +77,6 @@ http.createServer((req, res) => {
                 res.end(k)
             });
         }
-
-        // 获取数据
-        function getData() {
-
-        }
-
-
     } else {
         res.end('')
     }
