@@ -1,6 +1,6 @@
 <template >
   <div v-if="isOk" class="tableWap">
-    <h3 style="text-indent: 40%">重合的股票分析</h3>
+    <h3 style="text-indent: 45%">重合的股票分析</h3>
     <table class="chonghe">
       <tr>
         <th>基金名称</th>
@@ -38,7 +38,7 @@
         </td>
       </tr>
     </table>
-    <h3 style="text-indent: 40%; margin-top: 30px">股票被持仓分析</h3>
+    <h3 style="text-indent: 45%; margin-top: 30px">股票被持仓分析</h3>
     <table class="gupiao">
       <tr>
         <th>股票名称</th>
