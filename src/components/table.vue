@@ -70,7 +70,7 @@
 import { inject, ref } from "vue";
 
 let isOk = ref(false),
-  emit = defineEmits(["showTable"]),
+  emit = defineEmits(["showTable", "progress"]),
   $axios = inject("$axios"),
   chongfu = ref([]),
   shaiguo = ref([]),
@@ -127,36 +127,45 @@ function getData() {
     },
   }).then(async (res) => {
     let data = res.data;
-
     if (data.length) {
-      let cache = data.map((t) => t[0]),
-        now = shaiguo.value.map((t) => t[0]);
-      cache.forEach((t) => {
-        if (!now.includes(t)) {
-          data = data.filter((s) => s[0] !== t);
+      let now = shaiguo.value.map((t) => t[0]);
+      data.forEach((t) => {
+        // 修改名字，与excel内一致了
+        let tar = shaiguo.value.filter((j) => j[0] === t[0]);
+        if (tar.length) {
+          t[1] = tar[0][1];
+        }
+        if (!now.includes(t[0])) {
+          data = data.filter((s) => s[0] !== t[0]);
         } else {
-          shaiguo.value = shaiguo.value.filter((s) => s[0] !== t);
+          shaiguo.value = shaiguo.value.filter((s) => s[0] !== t[0]);
         }
       });
+      second(data);
+    } else {
+      second(null);
     }
-    second(data);
   });
 }
 async function second(data) {
-  for (let i = 0; i < shaiguo.value.length; i++) {
-    await $axios({
-      method: "get",
-      url: `chicang/${shaiguo.value[i][0]}`,
-      headers: {
-        "Content-Type": "text/html;charset=utf-8",
-      },
-    }).then((res) => {
-      let chicang = res.data.data.stock.map((t) => ({
-        code: t.zcCode,
-        name: t.zcName,
-      }));
-      shaiguo.value[i].push(chicang);
-    });
+  if (shaiguo.value.length) {
+    for (let i = 0; i < shaiguo.value.length; i++) {
+      emit("progress", Math.trunc(((i + 1) / shaiguo.value.length) * 100));
+
+      await $axios({
+        method: "get",
+        url: `chicang/${shaiguo.value[i][0]}`,
+        headers: {
+          "Content-Type": "text/html;charset=utf-8",
+        },
+      }).then((res) => {
+        let chicang = res.data.data.stock.map((t) => ({
+          code: t.zcCode,
+          name: t.zcName,
+        }));
+        shaiguo.value[i].push(chicang);
+      });
+    }
   }
   $axios({
     method: "post",
@@ -233,7 +242,6 @@ function zhengliFn(data) {
 function showRight(code, e) {
   clearTimeout(time);
   showright.value = code;
-  console.log(showright.value);
   time = setTimeout(() => {
     showright.value = "";
     spanTop.value = "";

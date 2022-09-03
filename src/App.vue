@@ -2,16 +2,19 @@
 import { ref, onMounted } from "vue";
 import HelloWorld from "./components/HelloWorld.vue";
 import Table from "./components/table.vue";
-let showAll = ref(false);
-
+let showAll = ref(false),
+  progress = ref(0);
 function showtable() {
   showAll.value = !showAll.value;
+}
+function progressFn(num) {
+  progress.value = num;
 }
 </script>
 
 <template>
-  <HelloWorld v-if="!showAll" class="modal" />
-  <Table @showTable="showtable" />
+  <HelloWorld v-if="!showAll" class="modal" :progress="progress" />
+  <Table @showTable="showtable" @progress="progressFn" />
 </template>
 
 <style>

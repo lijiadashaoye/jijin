@@ -1,7 +1,7 @@
 <template>
   <div class="wap">
     <div class="zhong">
-      <p>首次预计10分钟加载完</p>
+      <p v-if="progress > 0">{{ progress }}%</p>
       <ul class="content">
         <li v-for="i of arr" :key="i"></li>
       </ul>
@@ -12,6 +12,9 @@
 <script setup>
 import { ref } from "vue";
 let arr = ref(Array.from({ length: 4 }, (v, index) => (v ? "" : index)));
+defineProps({
+  progress: Number,
+});
 </script>
 <style scoped>
 .wap {
@@ -39,9 +42,11 @@ let arr = ref(Array.from({ length: 4 }, (v, index) => (v ? "" : index)));
   position: relative;
 }
 .zhong > p {
+  font-size: 30px;
+  color: rgb(99, 34, 240);
   position: absolute;
-  top: 44%;
-  left: 44px;
+  top: 30%;
+  left: 102px;
 }
 .content {
   width: 100%;
