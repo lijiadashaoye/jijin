@@ -45,8 +45,8 @@ defineProps({
   font-size: 30px;
   color: rgb(99, 34, 240);
   position: absolute;
-  top: 30%;
-  left: 102px;
+  top: 35%;
+  left: 98px;
 }
 .content {
   width: 100%;
