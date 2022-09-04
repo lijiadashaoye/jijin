@@ -141,17 +141,16 @@ function getData() {
           shaiguo.value = shaiguo.value.filter((s) => s[0] !== t[0]);
         }
       });
-      second(data);
-    } else {
-      second(null);
     }
+    second(data);
   });
 }
 async function second(data) {
+  let postData = [];
   if (shaiguo.value.length) {
+    postData.push(...shaiguo.value);
     for (let i = 0; i < shaiguo.value.length; i++) {
       emit("progress", Math.trunc(((i + 1) / shaiguo.value.length) * 100));
-
       await $axios({
         method: "get",
         url: `chicang/${shaiguo.value[i][0]}`,
@@ -167,13 +166,16 @@ async function second(data) {
       });
     }
   }
+  if (data.length) {
+    postData.push(...data);
+  }
   $axios({
     method: "post",
     url: `savePageData`,
     headers: {
       "Content-Type": "text/plain;charset=utf-8",
     },
-    data: data ? [...data, ...shaiguo.value] : shaiguo.value,
+    data: postData,
   }).then((res) => {
     zhengliFn(res.data);
   });
@@ -237,7 +239,7 @@ function zhengliFn(data) {
   setTimeout(() => {
     isOk.value = true;
     emit("showTable");
-  });
+  }, 500);
 }
 function showRight(code, e) {
   clearTimeout(time);
