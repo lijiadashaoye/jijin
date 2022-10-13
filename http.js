@@ -7,6 +7,7 @@ import fs, {
 
 } from 'fs';
 import http from 'http';
+import https from 'http';
 import xlsx from 'node-xlsx';
 
 http.createServer((req, res) => {
@@ -36,6 +37,16 @@ http.createServer((req, res) => {
                 res.end('[]')
             }
         }
+        // 获取页面使用的以存储的数据文件
+        if (k[0] === 'shouyi') {
+            res.setHeader('Content-Type', 'application/json;charset=utf-8');
+            if (existsSync('./shouyi.json')) {
+                let data = readFileSync('./shouyi.json');
+                res.end(data)
+            } else {
+                res.end('[]')
+            }
+        }
 
         // 获取基金持仓数据
         if (k[0] === 'chicang') {
@@ -56,10 +67,10 @@ http.createServer((req, res) => {
         if (k[0] === 'savePageData') {
             res.setHeader('Content-Type', 'application/json;charset=utf-8')
             var data = '';
-            req.on('data', function(mock) {
-                    data += mock
-                })
-                .on('end', function() {
+            req.on('data', function (mock) {
+                data += mock
+            })
+                .on('end', function () {
                     unlink('./pageData.json', err => {
                         writeFile('./pageData.json', data, e => {
                             var k = e ? 'false' : data;
@@ -71,7 +82,7 @@ http.createServer((req, res) => {
         // 存储页面使用的数据到文件
         if (k[0] === 'reset') {
             res.setHeader('Content-Type', 'application/json;charset=utf-8')
-                // 删除基金数据文件
+            // 删除基金数据文件
             unlink('./pageData.json', err => {
                 var k = err ? 'false' : 'true';
                 res.end(k)
