@@ -7,7 +7,6 @@ import fs, {
 
 } from 'fs';
 import http from 'http';
-import https from 'http';
 import xlsx from 'node-xlsx';
 
 http.createServer((req, res) => {
@@ -37,7 +36,7 @@ http.createServer((req, res) => {
                 res.end('[]')
             }
         }
-        // 获取页面使用的以存储的数据文件
+        // 获取页面使用的收益存储的数据文件
         if (k[0] === 'shouyi') {
             res.setHeader('Content-Type', 'application/json;charset=utf-8');
             if (existsSync('./shouyi.json')) {

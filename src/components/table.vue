@@ -80,7 +80,6 @@
 </template>
 <script setup>
 import { inject, ref, onMounted, reactive } from "vue";
-import kk from '../../myself.js';
 
 let isOk = ref(false),
   emit = defineEmits(["showTable", "progress"]),
@@ -128,33 +127,21 @@ let isOk = ref(false),
         getData();
       });
     } else {
-      getData();
+      getData();  // 使用本地存储的数据
     }
   });
 })();
+// 使用本地存储的数据
 function getData() {
-  Promise.all([
     $axios({
       method: "get",
       url: `getPageData`,
       headers: {
         "Content-Type": "tapplication/json;charset=utf-8",
       },
-    }),
-    $axios({
-      method: "get",
-      url: `shouyi`,
-      headers: {
-        "Content-Type": "tapplication/json;charset=utf-8",
-      },
     })
-  ])
     .then(async (res) => {
-      let data = res[0].data;
-      useHttps();  // 使用从天天基金网获取的数据
-      // useFile(res[1].data);
-
-
+      let data = res.data;
       if (data.length) {
         let now = shaiguo.value.map((t) => t[0]);
         data.forEach((t) => {
@@ -264,6 +251,8 @@ function zhengliFn(data) {
   chongheArr.value = chongheArr.value.sort(
     (a, b) => b.chonghe.length - a.chonghe.length
   );
+  // getShouYi()
+  useHttps();
   setTimeout(() => {
     isOk.value = true;
     emit("showTable");
@@ -283,7 +272,6 @@ function showRight(code, e) {
 function seeGuPiao(code) {
   window.open(`http://stockpage.10jqka.com.cn/${code}`);
 }
-
 function seeJiJin(code, e) {
   clearTimeout(time);
   showJiJin.value = code;
@@ -302,9 +290,11 @@ function setColor(str) {
   let reg = /^-/;
   return !reg.test(str)
 }
+// 使用从天天基金网获取的收益数据
 function useHttps() {
+  import('../../myself.js').then(res=>{
   let reg = /<tr>.+?<\/tr>/ig,
-    arr = JSON.parse(kk).content.match(reg),
+    arr = JSON.parse(res.default).content.match(reg),
     reg1 = /(?<=html'>).+?(?:\（)\d{6}(?:\）)/ig, // 基金名字和代码
     reg2 = /(.+)(?:\（)(\d{6})(?:\）)/ig, // 基金代码
     reg3 = /(?<=desc'>).+?(?=(<\/td|<br\/))/ig,  // 持仓
@@ -330,15 +320,25 @@ function useHttps() {
     return obj
   })
     .sort((a, b) => a.num - b.num)
+})
 }
-function useFile(data) {
-  shouyiArr.value = data.map(t => {
+// 读取本地收益文件
+function getShouYi() {
+  $axios({
+      method: "get",
+      url: `shouyi`,
+      headers: {
+        "Content-Type": "tapplication/json;charset=utf-8",
+      },
+    }).then(res=>{
+      shouyiArr.value = res.data.map(t => {
     let num = t.shouyilv.replace('%', '');
     if (!isNaN(+num)) {
       t.num = +num
     }
     return t
   }).sort((a, b) => a.num - b.num);
+    })
 }
 </script>
 <style scoped lang='scss'>
