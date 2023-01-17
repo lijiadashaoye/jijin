@@ -75,7 +75,7 @@
       <tr v-for="(t, i) of shouyiArr" :key="i" :class="{ toSell: t.sell }">
         <td>
           <p @contextmenu.prevent="seeJiJin(t.code, $event)">
-            {{ t.name }}（ {{ t.code }}）
+            {{ t.name }}&nbsp;&nbsp;&nbsp; {{ t.code }}
             <span
               @click="seejijin(showJiJin)"
               v-if="showJiJin === t.code"
@@ -112,7 +112,7 @@ let isOk = ref(false),
   chongfu = ref([]),
   shaiguo = ref([]),
   chongheArr = ref([]),
-  chongheLimit = 4, // 重合数量限定
+  chongheLimit = 3, // 重合数量限定
   gupiaoEnd = ref([]),
   showright = ref(""),
   showJiJin = ref(""),
