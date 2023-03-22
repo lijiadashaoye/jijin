@@ -104,7 +104,7 @@
   </div>
 </template>
 <script setup>
-import { inject, ref, onMounted, reactive } from "vue";
+import { inject, ref } from "vue";
 
 let isOk = ref(false),
   emit = defineEmits(["showTable", "progress"]),
